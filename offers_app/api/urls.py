@@ -1,3 +1,24 @@
-from django.urls import include, path
+from django.urls import path
+from .views import (
+    OfferListCreateView,
+    OfferDetailView,
+    OfferDetailObjectView
+)
 
-urlpatterns = []
+urlpatterns = [
+    path(
+        "offers/",
+        OfferListCreateView.as_view(),
+        name="offer-list",
+    ),
+    path(
+        "offers/<int:pk>/",
+        OfferDetailView.as_view(),
+        name="offer-detail",
+    ),
+    path(
+        "offerdetails/<int:pk>/",
+        OfferDetailObjectView.as_view(),
+        name="offer-detail-object",
+    )
+]
