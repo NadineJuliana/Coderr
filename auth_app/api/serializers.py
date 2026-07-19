@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework import serializers
+from profile_app.models import Profile
 
 User = get_user_model()
 
@@ -24,12 +25,16 @@ class RegistrationSerializer(serializers.Serializer):
     def create(self, validated_data):
         validated_data.pop("repeated_password")
 
-        return User.objects.create_user(
-            username=validated_data["username"],
-            email=validated_data["email"],
-            password=validated_data["password"],
-            type=validated_data["type"],
+        user = User.objects.create_user(
+        username=validated_data["username"],
+        email=validated_data["email"],
+        password=validated_data["password"],
+        type=validated_data["type"],
         )
+
+        Profile.objects.create(user=user)
+
+        return user
 
 
 class LoginSerializer(serializers.Serializer):
