@@ -12,6 +12,7 @@ from rest_framework.permissions import (
 )
 
 from offers_app.models import Offer, OfferDetail
+from .pagination import OfferPagination
 
 from .filters import OfferFilter
 from .permissions import (
@@ -36,6 +37,8 @@ class OfferListCreateView(ListCreateAPIView):
             "details__delivery_time_in_days",
         ),
     )
+
+    pagination_class = OfferPagination
 
     filter_backends = [
         DjangoFilterBackend,
