@@ -191,3 +191,48 @@ class ProfileAPITestCaseHappy(APITestCase):
             response.data[0]["type"],
             "customer",
         )
+        self.assertEqual(
+            response.data[0]["first_name"],
+            customer_user.first_name,
+        )
+        self.assertEqual(
+            response.data[0]["last_name"],
+            customer_user.last_name,
+        )
+
+    def test_get_profile_detail_returns_empty_strings_for_empty_fields(self):
+        user = User.objects.create_user(
+            username="empty_user",
+            email="empty@mail.de",
+            password="examplePassword",
+            type="customer",
+        )
+
+        Profile.objects.create(user=user)
+
+        url = reverse(
+            "profile-detail",
+            kwargs={"pk": user.id},
+        )
+
+        response = self.client.get(url)
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK,
+        )
+
+        fields = [
+            "first_name",
+            "last_name",
+            "location",
+            "tel",
+            "description",
+            "working_hours",
+        ]
+
+        for field in fields:
+            self.assertEqual(
+                response.data[field],
+                "",
+            )

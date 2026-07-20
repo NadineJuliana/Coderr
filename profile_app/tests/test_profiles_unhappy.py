@@ -40,6 +40,25 @@ class ProfileAPITestCaseUnhappy(APITestCase):
             HTTP_AUTHORIZATION="Token " + self.token.key
         )
 
+    def test_patch_profile_without_authentication_returns_401(self):
+        self.client.credentials()
+
+        url = reverse(
+            "profile-detail",
+            kwargs={"pk": self.user.id},
+        )
+
+        response = self.client.patch(
+            url,
+            {"first_name": "Changed Name"},
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_401_UNAUTHORIZED,
+        )
+
     def test_patch_other_profile_returns_403(self):
         url = reverse(
             "profile-detail",
@@ -60,6 +79,23 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         self.assertEqual(
             response.status_code,
             status.HTTP_403_FORBIDDEN,
+        )
+
+    def test_patch_non_existing_profile_returns_404(self):
+        url = reverse(
+            "profile-detail",
+            kwargs={"pk": 9999},
+        )
+
+        response = self.client.patch(
+            url,
+            {"first_name": "Changed Name"},
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_404_NOT_FOUND,
         )
 
     def test_get_profile_without_authentication_returns_401(self):
