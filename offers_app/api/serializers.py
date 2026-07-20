@@ -130,12 +130,40 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         ]
 
     def validate_details(self, value):
-        if self.instance is None and len(value) != 3:
+        if self.instance is None:
+            self.validate_create_details(value)
+        else:
+            self.validate_update_details(value)
+
+        return value
+
+    def validate_create_details(self, details):
+        if len(details) != 3:
             raise serializers.ValidationError(
                 "An offer must contain exactly three details."
             )
 
-        return value
+        self.validate_unique_offer_types(details)
+
+    def validate_update_details(self, details):
+        for detail in details:
+            if not detail.get("offer_type"):
+                raise serializers.ValidationError(
+                    "Each detail must include an offer_type."
+                )
+
+        self.validate_unique_offer_types(details)
+
+    def validate_unique_offer_types(self, details):
+        offer_types = [
+            detail.get("offer_type")
+            for detail in details
+        ]
+
+        if len(offer_types) != len(set(offer_types)):
+            raise serializers.ValidationError(
+                "Each offer_type may only occur once."
+            )
 
     def create(self, validated_data):
         details_data = validated_data.pop("details")
@@ -198,9 +226,19 @@ class OfferWriteSerializer(serializers.ModelSerializer):
     ):
         offer_type = detail_data.get("offer_type")
 
-        detail = offer.details.get(
-            offer_type=offer_type,
-        )
+        try:
+            detail = offer.details.get(
+                offer_type=offer_type,
+            )
+        except OfferDetail.DoesNotExist:
+            raise serializers.ValidationError(
+                {
+                    "details": (
+                        "No matching detail exists "
+                        f"for offer_type '{offer_type}'."
+                    )
+                }
+            )
 
         for field, value in detail_data.items():
             setattr(
