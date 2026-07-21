@@ -109,6 +109,10 @@ class OfferDetailAPITestCaseHappy(APITestCase):
             response.status_code,
             status.HTTP_200_OK,
         )
+        self.assertNotIn(
+            "user",
+            response.data,
+        )
         self.assertEqual(
             response.data["title"],
             data["title"],

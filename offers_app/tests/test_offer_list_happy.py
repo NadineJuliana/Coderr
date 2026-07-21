@@ -198,6 +198,10 @@ class OfferListAPITestCaseHappy(APITestCase):
             response.status_code,
             status.HTTP_201_CREATED,
         )
+        self.assertNotIn(
+            "user",
+            response.data,
+        )
         self.assertEqual(
             Offer.objects.count(),
             2,
