@@ -1,63 +1,20 @@
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.authtoken.models import Token
-from rest_framework.test import APITestCase
 
 from offers_app.models import Offer
-from offers_app.tests.factories import (
-    create_offer_with_details,
-)
+from offers_app.tests.base import OffersEndpointTestBase
 
 
-User = get_user_model()
-
-
-class OfferDetailAPITestCaseUnhappy(APITestCase):
-
-    def setUp(self):
-        self.business_user = User.objects.create_user(
-            username="business_user",
-            email="business@mail.de",
-            password="examplePassword",
-            type="business",
-        )
-
-        self.other_business_user = User.objects.create_user(
-            username="other_business",
-            email="other@mail.de",
-            password="examplePassword",
-            type="business",
-        )
-
-        self.business_token = Token.objects.create(
-            user=self.business_user,
-        )
-
-        self.other_business_token = Token.objects.create(
-            user=self.other_business_user,
-        )
-
-        (
-            self.offer,
-            self.basic_detail,
-            self.standard_detail,
-            self.premium_detail,
-        ) = create_offer_with_details(
-            self.business_user,
-        )
-
-    def authenticate(self, token):
-        self.client.credentials(
-            HTTP_AUTHORIZATION=(
-                "Token " + token.key
-            ),
-        )
+class OfferDetailAPITestCaseUnhappy(
+    OffersEndpointTestBase
+):
 
     def get_offer_url(self, offer_id):
         return reverse(
             "offer-detail",
-            kwargs={"pk": offer_id},
+            kwargs={
+                "pk": offer_id,
+            },
         )
 
     def test_unauthenticated_user_cannot_get_offer_detail(
