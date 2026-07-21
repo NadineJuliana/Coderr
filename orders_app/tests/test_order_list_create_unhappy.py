@@ -1,3 +1,7 @@
+"""
+Tests for unsuccessful order list and creation requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from orders_app.tests.base import OrdersEndpointTestBase
 class OrderListCreateAPITestCaseUnhappy(
     OrdersEndpointTestBase
 ):
+    """
+    Tests authentication, permissions, and creation validation.
+    """
 
     def test_unauthenticated_user_cannot_get_orders(self):
+        """
+        Tests that unauthenticated list requests return 401.
+        """
+
         url = reverse("order-list")
 
         response = self.client.get(url)
@@ -20,6 +31,10 @@ class OrderListCreateAPITestCaseUnhappy(
         )
 
     def test_unauthenticated_user_cannot_create_order(self):
+        """
+        Tests that unauthenticated order creation returns 401.
+        """
+
         url = reverse("order-list")
 
         data = {
@@ -42,6 +57,10 @@ class OrderListCreateAPITestCaseUnhappy(
         )
 
     def test_business_user_cannot_create_order(self):
+        """
+        Tests that a business user cannot create an order.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -68,6 +87,10 @@ class OrderListCreateAPITestCaseUnhappy(
         )
 
     def test_create_order_requires_offer_detail_id(self):
+        """
+        Tests that order creation requires an offer detail ID.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -96,6 +119,10 @@ class OrderListCreateAPITestCaseUnhappy(
     def test_create_order_returns_404_for_missing_offer_detail(
         self,
     ):
+        """
+        Tests that a missing offer detail returns 404.
+        """
+
         self.authenticate(
             self.customer_token,
         )

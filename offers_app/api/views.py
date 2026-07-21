@@ -1,3 +1,7 @@
+"""
+Views for listing, creating, retrieving, and modifying offers.
+"""
+
 from django.db.models import Min
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.exceptions import ValidationError
@@ -31,6 +35,10 @@ from .serializers import (
 
 
 class OfferListCreateView(ListCreateAPIView):
+    """
+    Lists offers and allows business users to create offers.
+    """
+
     queryset = Offer.objects.annotate(
         min_price=Min("details__price"),
         min_delivery_time=Min(
@@ -68,12 +76,20 @@ class OfferListCreateView(ListCreateAPIView):
     }
 
     def get_serializer_class(self):
+        """
+        Returns the serializer matching the request method.
+        """
+
         if self.request.method == "POST":
             return OfferWriteSerializer
 
         return OfferListSerializer
 
     def get_permissions(self):
+        """
+        Returns permissions matching the request method.
+        """
+
         if self.request.method == "GET":
             return [AllowAny()]
 
@@ -83,6 +99,10 @@ class OfferListCreateView(ListCreateAPIView):
         ]
 
     def list(self, request, *args, **kwargs):
+        """
+        Validates ordering before returning the offer list.
+        """
+
         self.validate_ordering(request)
 
         return super().list(
@@ -92,6 +112,10 @@ class OfferListCreateView(ListCreateAPIView):
         )
 
     def validate_ordering(self, request):
+        """
+        Rejects unsupported ordering parameters.
+        """
+
         ordering = request.query_params.get("ordering")
 
         if (
@@ -107,12 +131,20 @@ class OfferListCreateView(ListCreateAPIView):
             )
 
     def perform_create(self, serializer):
+        """
+        Saves the authenticated user as the offer creator.
+        """
+
         serializer.save(
             user=self.request.user,
         )
 
 
 class OfferDetailView(RetrieveUpdateDestroyAPIView):
+    """
+    Retrieves offers and allows owners to modify them.
+    """
+
     queryset = Offer.objects.annotate(
         min_price=Min("details__price"),
         min_delivery_time=Min(
@@ -126,6 +158,10 @@ class OfferDetailView(RetrieveUpdateDestroyAPIView):
     ]
 
     def get_serializer_class(self):
+        """
+        Returns the serializer matching the request method.
+        """
+
         if self.request.method == "GET":
             return OfferRetrieveSerializer
 
@@ -133,6 +169,10 @@ class OfferDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class OfferDetailObjectView(RetrieveAPIView):
+    """
+    Retrieves a single offer detail object.
+    """
+
     queryset = OfferDetail.objects.all()
 
     serializer_class = OfferDetailObjectSerializer

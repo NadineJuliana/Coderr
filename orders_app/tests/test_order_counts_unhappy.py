@@ -1,3 +1,7 @@
+"""
+Tests for unsuccessful order count endpoint requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -5,10 +9,17 @@ from orders_app.tests.base import OrdersTestBase
 
 
 class OrderCountsAPITestCaseUnhappy(OrdersTestBase):
+    """
+    Tests authentication and invalid user errors.
+    """
 
     def test_unauthenticated_user_cannot_get_order_count(
         self,
     ):
+        """
+        Tests that unauthenticated count requests return 401.
+        """
+
         url = reverse(
             "order-count",
             kwargs={
@@ -26,6 +37,10 @@ class OrderCountsAPITestCaseUnhappy(OrdersTestBase):
     def test_order_count_returns_404_for_missing_business_user(
         self,
     ):
+        """
+        Tests that a missing business user returns 404.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -47,6 +62,10 @@ class OrderCountsAPITestCaseUnhappy(OrdersTestBase):
     def test_order_count_returns_404_for_customer_id(
         self,
     ):
+        """
+        Tests that a customer ID returns 404.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -68,6 +87,10 @@ class OrderCountsAPITestCaseUnhappy(OrdersTestBase):
     def test_unauthenticated_user_cannot_get_completed_count(
         self,
     ):
+        """
+        Tests that unauthenticated completed counts return 401.
+        """
+
         url = reverse(
             "completed-order-count",
             kwargs={
@@ -85,6 +108,10 @@ class OrderCountsAPITestCaseUnhappy(OrdersTestBase):
     def test_completed_count_returns_404_for_missing_business_user(
         self,
     ):
+        """
+        Tests that a missing user returns 404 for completed counts.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -106,6 +133,10 @@ class OrderCountsAPITestCaseUnhappy(OrdersTestBase):
     def test_completed_count_returns_404_for_customer_id(
         self,
     ):
+        """
+        Tests that a customer ID returns 404 for completed counts.
+        """
+
         self.authenticate(
             self.customer_token,
         )

@@ -1,3 +1,7 @@
+"""
+Views for listing, creating, updating, and deleting reviews.
+"""
+
 from django_filters.rest_framework import (
     DjangoFilterBackend,
 )
@@ -24,6 +28,10 @@ from .serializers import (
 # Create your views here.
 
 class ReviewListCreateView(ListCreateAPIView):
+    """
+    Lists reviews and allows customers to create new reviews.
+    """
+
     queryset = Review.objects.all()
     permission_classes = [
         IsAuthenticated,
@@ -42,12 +50,20 @@ class ReviewListCreateView(ListCreateAPIView):
     ]
 
     def get_serializer_class(self):
+        """
+        Returns the serializer matching the request method.
+        """
+
         if self.request.method == "POST":
             return ReviewCreateSerializer
 
         return ReviewSerializer
 
     def get_permissions(self):
+        """
+        Adds the customer permission to review creation requests.
+        """
+
         permissions = [
             IsAuthenticated(),
         ]
@@ -63,6 +79,10 @@ class ReviewListCreateView(ListCreateAPIView):
 class ReviewDetailView(
     RetrieveUpdateDestroyAPIView
 ):
+    """
+    Allows review authors to update or delete their reviews.
+    """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [

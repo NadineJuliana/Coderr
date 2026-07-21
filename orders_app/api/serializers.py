@@ -1,3 +1,7 @@
+"""
+Serializers for creating, retrieving, and updating orders.
+"""
+
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
@@ -6,6 +10,10 @@ from orders_app.models import Order
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    """
+    Serializes existing orders and validates status updates.
+    """
+
     price = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -14,6 +22,10 @@ class OrderSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        """
+        Defines the fields used for existing orders.
+        """
+
         model = Order
         fields = [
             "id",
@@ -45,12 +57,20 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
+        """
+        Validates submitted fields during partial updates.
+        """
+
         if self.partial:
             self.validate_patch_fields()
 
         return attrs
 
     def validate_patch_fields(self):
+        """
+        Ensures that only the order status can be updated.
+        """
+
         allowed_fields = {
             "status",
         }
@@ -77,6 +97,10 @@ class OrderSerializer(serializers.ModelSerializer):
 class OrderCreateSerializer(
     serializers.ModelSerializer
 ):
+    """
+    Creates orders from an existing offer detail.
+    """
+
     offer_detail_id = serializers.IntegerField(
         write_only=True,
     )
@@ -89,6 +113,10 @@ class OrderCreateSerializer(
     )
 
     class Meta:
+        """
+        Defines the fields used when creating orders.
+        """
+
         model = Order
         fields = [
             "id",
@@ -122,6 +150,10 @@ class OrderCreateSerializer(
         ]
 
     def create(self, validated_data):
+        """
+        Creates an order using data from the selected offer detail.
+        """
+
         offer_detail_id = validated_data.pop(
             "offer_detail_id"
         )

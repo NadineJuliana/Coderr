@@ -1,3 +1,7 @@
+"""
+Review model for customer ratings of business users.
+"""
+
 from django.db import models
 from django.conf import settings
 from django.core.validators import (
@@ -9,6 +13,10 @@ from django.core.validators import (
 
 
 class Review(models.Model):
+    """
+    Stores a customer review for a business user.
+    """
+
     business_user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -39,6 +47,10 @@ class Review(models.Model):
     )
 
     class Meta:
+        """
+        Defines database constraints for reviews.
+        """
+
         constraints = [
             models.UniqueConstraint(
                 fields=[
@@ -52,6 +64,10 @@ class Review(models.Model):
         ]
 
     def __str__(self):
+        """
+        Returns the reviewer, business user, and rating.
+        """
+
         return (
             f"{self.reviewer} - "
             f"{self.business_user}: "

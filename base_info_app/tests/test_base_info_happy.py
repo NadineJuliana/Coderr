@@ -1,3 +1,7 @@
+"""
+Tests for the platform base information endpoint.
+"""
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
@@ -11,8 +15,15 @@ User = get_user_model()
 
 
 class BaseInfoAPITestCaseHappy(APITestCase):
+    """
+    Tests successful requests for platform statistics.
+    """
 
     def setUp(self):
+        """
+        Creates users, reviews, and offers for the statistics test.
+        """
+
         self.customer_user = User.objects.create_user(
             username="customer_user",
             email="customer@mail.de",
@@ -68,6 +79,10 @@ class BaseInfoAPITestCaseHappy(APITestCase):
         )
 
     def test_base_info_returns_platform_statistics(self):
+        """
+        Tests that the endpoint returns the expected statistics.
+        """
+
         url = reverse("base-info")
 
         response = self.client.get(url)

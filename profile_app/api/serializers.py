@@ -1,9 +1,17 @@
+"""
+Serializers for profile detail and profile list endpoints.
+"""
+
 from rest_framework import serializers
 
 from profile_app.models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializes detailed profile data and supports profile updates.
+    """
+
     username = serializers.CharField(
         source="user.username",
         read_only=True,
@@ -28,6 +36,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        """
+        Defines the profile fields used by the serializer.
+        """
+
         model = Profile
         fields = [
             "user",
@@ -49,6 +61,10 @@ class ProfileSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
+        """
+        Updates profile data and related user information.
+        """
+
         user_data = validated_data.pop("user", {})
 
         user = instance.user
@@ -73,6 +89,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class BusinessProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializes profile data for business profile lists.
+    """
+
     username = serializers.CharField(
         source="user.username",
         read_only=True,
@@ -91,6 +111,10 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        """
+        Defines the fields returned for business profiles.
+        """
+
         model = Profile
         fields = [
             "user",
@@ -107,6 +131,10 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
 
 
 class CustomerProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializes profile data for customer profile lists.
+    """
+
     username = serializers.CharField(
         source="user.username",
         read_only=True,
@@ -125,6 +153,10 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        """
+        Defines the fields returned for customer profiles.
+        """
+
         model = Profile
         fields = [
             "user",

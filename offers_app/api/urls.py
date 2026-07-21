@@ -1,8 +1,12 @@
+"""
+URL routes for offer endpoints.
+"""
+
 from django.urls import path
 from .views import (
     OfferListCreateView,
     OfferDetailView,
-    OfferDetailObjectView
+    OfferDetailObjectView,
 )
 
 urlpatterns = [

@@ -1,3 +1,7 @@
+"""
+Tests for unsuccessful offer detail endpoint requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from offers_app.tests.base import OffersEndpointTestBase
 class OfferDetailAPITestCaseUnhappy(
     OffersEndpointTestBase
 ):
+    """
+    Tests authentication, permission, validation, and missing offer errors.
+    """
 
     def get_offer_url(self, offer_id):
+        """
+        Returns the detail URL for the provided offer ID.
+        """
+
         return reverse(
             "offer-detail",
             kwargs={
@@ -20,6 +31,10 @@ class OfferDetailAPITestCaseUnhappy(
     def test_unauthenticated_user_cannot_get_offer_detail(
         self,
     ):
+        """
+        Tests that unauthenticated offer requests return status 401.
+        """
+
         url = self.get_offer_url(
             self.offer.id,
         )
@@ -34,6 +49,10 @@ class OfferDetailAPITestCaseUnhappy(
     def test_authenticated_user_gets_404_for_missing_offer(
         self,
     ):
+        """
+        Tests that requesting a missing offer returns status 404.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -48,6 +67,10 @@ class OfferDetailAPITestCaseUnhappy(
         )
 
     def test_non_owner_cannot_update_offer(self):
+        """
+        Tests that a non-owner cannot update an offer.
+        """
+
         self.authenticate(
             self.other_business_token,
         )
@@ -72,6 +95,10 @@ class OfferDetailAPITestCaseUnhappy(
     def test_unauthenticated_user_cannot_update_offer(
         self,
     ):
+        """
+        Tests that unauthenticated offer updates return status 401.
+        """
+
         url = self.get_offer_url(
             self.offer.id,
         )
@@ -90,6 +117,10 @@ class OfferDetailAPITestCaseUnhappy(
         )
 
     def test_update_missing_offer_returns_404(self):
+        """
+        Tests that updating a missing offer returns status 404.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -112,6 +143,10 @@ class OfferDetailAPITestCaseUnhappy(
     def test_update_offer_with_invalid_data_returns_400(
         self,
     ):
+        """
+        Tests that invalid offer update data returns status 400.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -144,6 +179,10 @@ class OfferDetailAPITestCaseUnhappy(
         )
 
     def test_non_owner_cannot_delete_offer(self):
+        """
+        Tests that a non-owner cannot delete an offer.
+        """
+
         self.authenticate(
             self.other_business_token,
         )
@@ -167,6 +206,10 @@ class OfferDetailAPITestCaseUnhappy(
     def test_unauthenticated_user_cannot_delete_offer(
         self,
     ):
+        """
+        Tests that unauthenticated offer deletion returns status 401.
+        """
+
         url = self.get_offer_url(
             self.offer.id,
         )
@@ -184,6 +227,10 @@ class OfferDetailAPITestCaseUnhappy(
         )
 
     def test_delete_missing_offer_returns_404(self):
+        """
+        Tests that deleting a missing offer returns status 404.
+        """
+
         self.authenticate(
             self.business_token,
         )

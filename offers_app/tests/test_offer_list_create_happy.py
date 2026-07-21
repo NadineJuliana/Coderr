@@ -1,3 +1,7 @@
+"""
+Tests for successful offer list and creation requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,13 +12,24 @@ from offers_app.tests.base import OffersEndpointTestBase
 class OfferListCreateAPITestCaseHappy(
     OffersEndpointTestBase
 ):
+    """
+    Tests successful offer listing, filtering, and creation.
+    """
 
     def setUp(self):
+        """
+        Creates the shared test data and offer list URL.
+        """
+
         super().setUp()
 
         self.url = reverse("offer-list")
 
     def test_get_offer_list_returns_offers(self):
+        """
+        Tests that the offer list returns paginated offers.
+        """
+
         response = self.client.get(self.url)
 
         self.assertEqual(
@@ -56,6 +71,10 @@ class OfferListCreateAPITestCaseHappy(
         )
 
     def test_get_offer_list_supports_query_parameters(self):
+        """
+        Tests filtering, searching, and ordering the offer list.
+        """
+
         (
             other_offer,
             other_basic_detail,
@@ -101,6 +120,10 @@ class OfferListCreateAPITestCaseHappy(
         )
 
     def test_get_offer_list_supports_page_size(self):
+        """
+        Tests that the offer list supports a custom page size.
+        """
+
         response = self.client.get(
             self.url,
             {
@@ -118,6 +141,10 @@ class OfferListCreateAPITestCaseHappy(
         )
 
     def test_business_user_can_create_offer(self):
+        """
+        Tests that a business user can create an offer.
+        """
+
         self.authenticate(
             self.business_token,
         )

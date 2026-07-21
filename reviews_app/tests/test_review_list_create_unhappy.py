@@ -1,3 +1,7 @@
+"""
+Tests for unsuccessful review list and creation requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from reviews_app.tests.base import ReviewsEndpointTestBase
 class ReviewListCreateAPITestCaseUnhappy(
     ReviewsEndpointTestBase
 ):
+    """
+    Tests authentication, permission, and validation errors.
+    """
 
     def test_unauthenticated_user_cannot_get_reviews(self):
+        """
+        Tests that unauthenticated review list requests return 401.
+        """
+
         url = reverse("review-list")
 
         response = self.client.get(url)
@@ -20,6 +31,10 @@ class ReviewListCreateAPITestCaseUnhappy(
         )
 
     def test_unauthenticated_user_cannot_create_review(self):
+        """
+        Tests that unauthenticated review creation returns 401.
+        """
+
         url = reverse("review-list")
 
         data = {
@@ -40,6 +55,10 @@ class ReviewListCreateAPITestCaseUnhappy(
         )
 
     def test_business_user_cannot_create_review(self):
+        """
+        Tests that a business user cannot create a review.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -64,6 +83,10 @@ class ReviewListCreateAPITestCaseUnhappy(
         )
 
     def test_customer_cannot_review_same_business_twice(self):
+        """
+        Tests that duplicate reviews for one business are rejected.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -94,6 +117,10 @@ class ReviewListCreateAPITestCaseUnhappy(
     def test_customer_cannot_create_review_with_invalid_rating(
         self,
     ):
+        """
+        Tests that a rating outside the valid range is rejected.
+        """
+
         self.authenticate(
             self.second_customer_token,
         )

@@ -1,3 +1,7 @@
+"""
+Serializers for creating, retrieving, and updating offers.
+"""
+
 from django.urls import reverse
 from rest_framework import serializers
 
@@ -5,6 +9,10 @@ from offers_app.models import Offer, OfferDetail
 
 
 class OfferDetailObjectSerializer(serializers.ModelSerializer):
+    """
+    Serializes complete offer detail objects.
+    """
+
     price = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -12,6 +20,10 @@ class OfferDetailObjectSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        """
+        Defines the fields used for offer details.
+        """
+
         model = OfferDetail
         fields = [
             "id",
@@ -28,9 +40,17 @@ class OfferDetailObjectSerializer(serializers.ModelSerializer):
 
 
 class OfferDetailLinkSerializer(serializers.ModelSerializer):
+    """
+    Serializes offer detail identifiers and URLs.
+    """
+
     url = serializers.SerializerMethodField()
 
     class Meta:
+        """
+        Defines the fields used for offer detail links.
+        """
+
         model = OfferDetail
         fields = [
             "id",
@@ -38,6 +58,10 @@ class OfferDetailLinkSerializer(serializers.ModelSerializer):
         ]
 
     def get_url(self, obj):
+        """
+        Returns the relative or absolute offer detail URL.
+        """
+
         path = reverse(
             "offer-detail-object",
             kwargs={"pk": obj.pk},
@@ -52,6 +76,10 @@ class OfferDetailLinkSerializer(serializers.ModelSerializer):
 
 
 class OfferBaseSerializer(serializers.ModelSerializer):
+    """
+    Provides shared fields for offer serializers.
+    """
+
     min_price = serializers.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -64,6 +92,10 @@ class OfferBaseSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
+        """
+        Defines the shared offer fields.
+        """
+
         model = Offer
         fields = [
             "id",
@@ -88,12 +120,20 @@ class OfferBaseSerializer(serializers.ModelSerializer):
 
 
 class OfferUserDetailsSerializer(serializers.Serializer):
+    """
+    Serializes basic information about an offer creator.
+    """
+
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     username = serializers.CharField()
 
 
 class OfferListSerializer(OfferBaseSerializer):
+    """
+    Serializes offers for list responses.
+    """
+
     details = OfferDetailLinkSerializer(
         many=True,
         read_only=True,
@@ -105,12 +145,20 @@ class OfferListSerializer(OfferBaseSerializer):
     )
 
     class Meta(OfferBaseSerializer.Meta):
+        """
+        Adds creator details to the shared offer fields.
+        """
+
         fields = OfferBaseSerializer.Meta.fields + [
             "user_details",
         ]
 
 
 class OfferRetrieveSerializer(OfferBaseSerializer):
+    """
+    Serializes a single offer with detail links.
+    """
+
     details = OfferDetailLinkSerializer(
         many=True,
         read_only=True,
@@ -118,15 +166,22 @@ class OfferRetrieveSerializer(OfferBaseSerializer):
 
 
 class OfferWriteSerializer(serializers.ModelSerializer):
+    """
+    Serializes and validates offer creation and updates.
+    """
+
     details = OfferDetailObjectSerializer(
         many=True,
     )
 
     class Meta:
+        """
+        Defines writable offer fields.
+        """
+
         model = Offer
         fields = [
             "id",
-            # "user",
             "title",
             "image",
             "description",
@@ -134,10 +189,13 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
-            # "user",
         ]
 
     def validate_details(self, value):
+        """
+        Validates offer details for creation or updates.
+        """
+
         if self.instance is None:
             self.validate_create_details(value)
         else:
@@ -146,6 +204,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         return value
 
     def validate_create_details(self, details):
+        """
+        Ensures that new offers contain exactly three details.
+        """
+
         if len(details) != 3:
             raise serializers.ValidationError(
                 "An offer must contain exactly three details."
@@ -154,6 +216,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         self.validate_unique_offer_types(details)
 
     def validate_update_details(self, details):
+        """
+        Ensures that updated details include an offer type.
+        """
+
         for detail in details:
             if not detail.get("offer_type"):
                 raise serializers.ValidationError(
@@ -163,6 +229,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         self.validate_unique_offer_types(details)
 
     def validate_unique_offer_types(self, details):
+        """
+        Ensures that every offer type occurs only once.
+        """
+
         offer_types = [
             detail.get("offer_type")
             for detail in details
@@ -174,6 +244,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
             )
 
     def create(self, validated_data):
+        """
+        Creates an offer and its related details.
+        """
+
         details_data = validated_data.pop("details")
 
         offer = Offer.objects.create(
@@ -192,6 +266,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         offer,
         details_data,
     ):
+        """
+        Creates all details belonging to an offer.
+        """
+
         for detail_data in details_data:
             OfferDetail.objects.create(
                 offer=offer,
@@ -199,6 +277,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
             )
 
     def update(self, instance, validated_data):
+        """
+        Updates an offer and its submitted details.
+        """
+
         details_data = validated_data.pop(
             "details",
             [],
@@ -221,6 +303,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         offer,
         details_data,
     ):
+        """
+        Updates each submitted offer detail.
+        """
+
         for detail_data in details_data:
             self.update_offer_detail(
                 offer,
@@ -232,6 +318,10 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         offer,
         detail_data,
     ):
+        """
+        Updates the matching detail for an offer type.
+        """
+
         offer_type = detail_data.get("offer_type")
 
         try:

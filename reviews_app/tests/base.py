@@ -1,3 +1,7 @@
+"""
+Shared test setup and helper methods for review endpoint tests.
+"""
+
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -9,8 +13,15 @@ User = get_user_model()
 
 
 class ReviewsTestBase(APITestCase):
+    """
+    Provides shared users, tokens, and review creation helpers.
+    """
 
     def setUp(self):
+        """
+        Creates customer and business users with authentication tokens.
+        """
+
         self.customer_user = User.objects.create_user(
             username="customer_user",
             email="customer@mail.de",
@@ -52,6 +63,10 @@ class ReviewsTestBase(APITestCase):
         )
 
     def authenticate(self, token):
+        """
+        Authenticates the test client with the provided token.
+        """
+
         self.client.credentials(
             HTTP_AUTHORIZATION=f"Token {token.key}",
         )
@@ -64,6 +79,10 @@ class ReviewsTestBase(APITestCase):
         rating=4,
         description="Sehr professioneller Service.",
     ):
+        """
+        Creates and returns a review with optional custom values.
+        """
+
         return Review.objects.create(
             business_user=business_user or self.business_user,
             reviewer=reviewer or self.customer_user,
@@ -73,8 +92,15 @@ class ReviewsTestBase(APITestCase):
 
 
 class ReviewsEndpointTestBase(ReviewsTestBase):
+    """
+    Provides existing reviews for review endpoint tests.
+    """
 
     def setUp(self):
+        """
+        Creates the shared users, tokens, and two reviews.
+        """
+
         super().setUp()
 
         self.review = self.create_review()

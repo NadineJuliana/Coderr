@@ -1,3 +1,7 @@
+"""
+Order model for purchased offer details.
+"""
+
 from django.conf import settings
 from django.db import models
 
@@ -5,8 +9,15 @@ from django.db import models
 
 
 class Order(models.Model):
+    """
+    Stores a purchased offer detail as an independent order.
+    """
 
     class OrderStatus(models.TextChoices):
+        """
+        Defines the available order statuses.
+        """
+
         IN_PROGRESS = (
             "in_progress",
             "In progress",
@@ -68,4 +79,8 @@ class Order(models.Model):
     )
 
     def __str__(self):
+        """
+        Returns the order title.
+        """
+
         return self.title

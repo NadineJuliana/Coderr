@@ -1,3 +1,7 @@
+"""
+Models for offers and their pricing details.
+"""
+
 from django.conf import settings
 from django.db import models
 
@@ -5,6 +9,10 @@ from django.db import models
 
 
 class Offer(models.Model):
+    """
+    Stores an offer created by a business user.
+    """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="offers",
@@ -32,12 +40,23 @@ class Offer(models.Model):
     )
 
     def __str__(self):
+        """
+        Returns the offer title.
+        """
+
         return self.title
 
 
 class OfferDetail(models.Model):
+    """
+    Stores a pricing level belonging to an offer.
+    """
 
     class OfferType(models.TextChoices):
+        """
+        Defines the available offer detail types.
+        """
+
         BASIC = "basic", "Basic"
         STANDARD = "standard", "Standard"
         PREMIUM = "premium", "Premium"
@@ -71,4 +90,8 @@ class OfferDetail(models.Model):
     )
 
     def __str__(self):
+        """
+        Returns the offer title and detail type.
+        """
+
         return f"{self.offer.title} - {self.offer_type}"

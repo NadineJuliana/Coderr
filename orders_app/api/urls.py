@@ -1,3 +1,7 @@
+"""
+URL routes for order endpoints.
+"""
+
 from django.urls import path
 from .views import (
     CompletedOrderCountView,

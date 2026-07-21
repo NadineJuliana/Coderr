@@ -1,3 +1,7 @@
+"""
+Views for retrieving general platform statistics.
+"""
+
 from django.contrib.auth import get_user_model
 from django.db.models import Avg
 from rest_framework.permissions import AllowAny
@@ -14,11 +18,19 @@ User = get_user_model()
 
 
 class BaseInfoView(APIView):
+    """
+    Provides general statistics about the platform.
+    """
+
     permission_classes = [
         AllowAny,
     ]
 
     def get(self, request):
+        """
+        Returns review, rating, business profile, and offer statistics.
+        """
+
         review_count = Review.objects.count()
 
         average_rating = Review.objects.aggregate(

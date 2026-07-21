@@ -1,3 +1,7 @@
+"""
+URL routes for platform base information.
+"""
+
 from django.urls import path
 
 from .views import BaseInfoView

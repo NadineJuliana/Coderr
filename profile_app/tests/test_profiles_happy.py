@@ -1,3 +1,7 @@
+""" 
+Tests for successful profile endpoint requests. 
+"""
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
@@ -11,8 +15,15 @@ User = get_user_model()
 
 
 class ProfileAPITestCaseHappy(APITestCase):
+    """ 
+    Tests successful profile detail and list requests. 
+    """
 
     def setUp(self):
+        """
+        Creates a business user, profile, and authentication token.
+        """
+
         self.user = User.objects.create_user(
             username="max_mustermann",
             email="max@business.de",
@@ -36,6 +47,10 @@ class ProfileAPITestCaseHappy(APITestCase):
         )
 
     def test_get_profile_detail(self):
+        """
+        Tests that an authenticated user can retrieve a profile.
+        """
+
         url = reverse(
             "profile-detail",
             kwargs={"pk": self.user.id},
@@ -68,6 +83,10 @@ class ProfileAPITestCaseHappy(APITestCase):
         )
 
     def test_patch_own_profile(self):
+        """
+        Tests that a user can update their own profile.
+        """
+
         url = reverse(
             "profile-detail",
             kwargs={"pk": self.user.id},
@@ -124,6 +143,10 @@ class ProfileAPITestCaseHappy(APITestCase):
         )
 
     def test_get_business_profile_list(self):
+        """
+        Tests that only business profiles are returned.
+        """
+
         customer_user = User.objects.create_user(
             username="customer_user",
             email="customer@mail.de",
@@ -158,6 +181,10 @@ class ProfileAPITestCaseHappy(APITestCase):
         )
 
     def test_get_customer_profile_list(self):
+        """
+        Tests that only customer profiles are returned.
+        """
+
         customer_user = User.objects.create_user(
             username="customer_jane",
             email="customer@mail.de",
@@ -201,6 +228,10 @@ class ProfileAPITestCaseHappy(APITestCase):
         )
 
     def test_get_profile_detail_returns_empty_strings_for_empty_fields(self):
+        """
+        Tests that empty profile fields are returned as empty strings.
+        """
+
         user = User.objects.create_user(
             username="empty_user",
             email="empty@mail.de",

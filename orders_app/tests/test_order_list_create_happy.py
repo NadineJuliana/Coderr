@@ -1,3 +1,7 @@
+"""
+Tests for successful order list and creation requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from orders_app.tests.base import OrdersEndpointTestBase
 class OrderListCreateAPITestCaseHappy(
     OrdersEndpointTestBase
 ):
+    """
+    Tests successful order listing and creation.
+    """
 
     def test_customer_can_get_own_orders(self):
+        """
+        Tests that a customer receives only their own orders.
+        """
+
         self.create_order(
             customer_user=self.other_customer_user,
             title="Foreign Customer Order",
@@ -53,6 +64,10 @@ class OrderListCreateAPITestCaseHappy(
         )
 
     def test_business_user_can_get_received_orders(self):
+        """
+        Tests that a business user receives assigned orders.
+        """
+
         self.create_order(
             business_user=self.other_business_user,
             title="Foreign Business Order",
@@ -80,6 +95,10 @@ class OrderListCreateAPITestCaseHappy(
         )
 
     def test_customer_can_create_order(self):
+        """
+        Tests that a customer can create an order.
+        """
+
         self.authenticate(
             self.customer_token,
         )

@@ -1,3 +1,7 @@
+"""
+Tests for successful review list and creation requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from reviews_app.tests.base import ReviewsEndpointTestBase
 class ReviewListCreateAPITestCaseHappy(
     ReviewsEndpointTestBase
 ):
+    """
+    Tests successful review listing, filtering, and creation.
+    """
 
     def test_authenticated_user_can_get_reviews(self):
+        """
+        Tests that an authenticated user can retrieve reviews.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -36,6 +47,10 @@ class ReviewListCreateAPITestCaseHappy(
         )
 
     def test_reviews_can_be_filtered_by_business_user(self):
+        """
+        Tests filtering reviews by business user.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -63,6 +78,10 @@ class ReviewListCreateAPITestCaseHappy(
         )
 
     def test_reviews_can_be_filtered_by_reviewer(self):
+        """
+        Tests filtering reviews by reviewer.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -90,6 +109,10 @@ class ReviewListCreateAPITestCaseHappy(
         )
 
     def test_reviews_can_be_ordered_by_rating(self):
+        """
+        Tests ordering reviews by rating.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -117,6 +140,10 @@ class ReviewListCreateAPITestCaseHappy(
         )
 
     def test_reviews_can_be_ordered_by_updated_at(self):
+        """
+        Tests ordering reviews by their last update time.
+        """
+
         self.review.description = "Aktualisierte Bewertung"
         self.review.save()
 
@@ -143,6 +170,10 @@ class ReviewListCreateAPITestCaseHappy(
         )
 
     def test_customer_can_create_review(self):
+        """
+        Tests that a customer can create a review.
+        """
+
         self.authenticate(
             self.customer_token,
         )

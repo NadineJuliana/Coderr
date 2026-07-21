@@ -1,3 +1,7 @@
+"""
+URL routes for review endpoints.
+"""
+
 from django.urls import include, path
 from .views import (
     ReviewDetailView,

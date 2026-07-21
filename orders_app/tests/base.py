@@ -1,3 +1,7 @@
+"""
+Shared test setup and helpers for order endpoint tests.
+"""
+
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -9,8 +13,15 @@ User = get_user_model()
 
 
 class OrdersTestBase(APITestCase):
+    """
+    Provides shared users, tokens, and order helper methods.
+    """
 
     def setUp(self):
+        """
+        Creates customer, business, and staff users with tokens.
+        """
+
         self.customer_user = User.objects.create_user(
             username="customer_user",
             email="customer@mail.de",
@@ -68,6 +79,10 @@ class OrdersTestBase(APITestCase):
         )
 
     def authenticate(self, token):
+        """
+        Authenticates the test client with the provided token.
+        """
+
         self.client.credentials(
             HTTP_AUTHORIZATION="Token " + token.key,
         )
@@ -80,6 +95,10 @@ class OrdersTestBase(APITestCase):
         status_value=Order.OrderStatus.IN_PROGRESS,
         title="Test Order",
     ):
+        """
+        Creates an order with optional user and status values.
+        """
+
         return Order.objects.create(
             customer_user=customer_user or self.customer_user,
             business_user=business_user or self.business_user,
@@ -94,8 +113,15 @@ class OrdersTestBase(APITestCase):
 
 
 class OrdersEndpointTestBase(OrdersTestBase):
+    """
+    Provides an offer detail and an existing order.
+    """
 
     def setUp(self):
+        """
+        Creates shared users, an offer detail, and an order.
+        """
+
         super().setUp()
 
         self.offer = Offer.objects.create(

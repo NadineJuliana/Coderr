@@ -1,3 +1,7 @@
+"""
+Tests for unsuccessful review detail endpoint requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from reviews_app.tests.base import ReviewsEndpointTestBase
 class ReviewDetailAPITestCaseUnhappy(
     ReviewsEndpointTestBase
 ):
+    """
+    Tests authentication, permission, and missing review errors.
+    """
 
     def test_unauthenticated_user_cannot_update_review(self):
+        """
+        Tests that unauthenticated review updates return status 401.
+        """
+
         url = reverse(
             "review-detail",
             kwargs={
@@ -33,6 +44,10 @@ class ReviewDetailAPITestCaseUnhappy(
         )
 
     def test_other_customer_cannot_update_review(self):
+        """
+        Tests that another customer cannot update the review.
+        """
+
         self.authenticate(
             self.second_customer_token,
         )
@@ -61,6 +76,10 @@ class ReviewDetailAPITestCaseUnhappy(
         )
 
     def test_reviewer_cannot_update_business_user(self):
+        """
+        Tests that the reviewed business user cannot be changed.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -95,6 +114,10 @@ class ReviewDetailAPITestCaseUnhappy(
         )
 
     def test_update_nonexistent_review_returns_not_found(self):
+        """
+        Tests that updating a missing review returns status 404.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -122,6 +145,10 @@ class ReviewDetailAPITestCaseUnhappy(
         )
 
     def test_unauthenticated_user_cannot_delete_review(self):
+        """
+        Tests that unauthenticated review deletion returns status 401.
+        """
+
         url = reverse(
             "review-detail",
             kwargs={
@@ -137,6 +164,10 @@ class ReviewDetailAPITestCaseUnhappy(
         )
 
     def test_other_customer_cannot_delete_review(self):
+        """
+        Tests that another customer cannot delete the review.
+        """
+
         self.authenticate(
             self.second_customer_token,
         )
@@ -161,6 +192,10 @@ class ReviewDetailAPITestCaseUnhappy(
         )
 
     def test_delete_nonexistent_review_returns_not_found(self):
+        """
+        Tests that deleting a missing review returns status 404.
+        """
+
         self.authenticate(
             self.customer_token,
         )

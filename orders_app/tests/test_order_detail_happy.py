@@ -1,3 +1,7 @@
+"""
+Tests for successful order detail endpoint requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from orders_app.tests.base import OrdersEndpointTestBase
 class OrderDetailAPITestCaseHappy(
     OrdersEndpointTestBase
 ):
+    """
+    Tests successful order updates and deletion.
+    """
 
     def test_business_user_can_update_order_status(self):
+        """
+        Tests that the assigned business user can update status.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -48,6 +59,10 @@ class OrderDetailAPITestCaseHappy(
         )
 
     def test_admin_can_delete_order(self):
+        """
+        Tests that a staff user can delete an order.
+        """
+
         self.authenticate(
             self.admin_token,
         )

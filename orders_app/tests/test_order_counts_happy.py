@@ -1,3 +1,7 @@
+"""
+Tests for successful order count endpoint requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -6,8 +10,15 @@ from orders_app.tests.base import OrdersTestBase
 
 
 class OrderCountsAPITestCaseHappy(OrdersTestBase):
+    """
+    Tests successful active and completed order counts.
+    """
 
     def setUp(self):
+        """
+        Creates shared users and an active order.
+        """
+
         super().setUp()
 
         self.order = self.create_order(
@@ -17,6 +28,10 @@ class OrderCountsAPITestCaseHappy(OrdersTestBase):
     def test_authenticated_user_can_get_in_progress_order_count(
         self,
     ):
+        """
+        Tests retrieving the active order count.
+        """
+
         self.create_order(
             title="Website Design",
         )
@@ -56,6 +71,10 @@ class OrderCountsAPITestCaseHappy(OrdersTestBase):
     def test_authenticated_user_can_get_completed_order_count(
         self,
     ):
+        """
+        Tests retrieving the completed order count.
+        """
+
         self.create_order(
             title="Completed Logo Design",
             status_value=Order.OrderStatus.COMPLETED,

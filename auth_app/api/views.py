@@ -1,4 +1,7 @@
-from django.shortcuts import render
+"""
+Views for user registration and authentication.
+"""
+
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView
@@ -11,10 +14,18 @@ from .serializers import RegistrationSerializer, LoginSerializer
 
 
 class RegistrationView(GenericAPIView):
+    """
+    Handles requests for creating new user accounts.
+    """
+
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer
 
     def post(self, request):
+        """
+        Creates a user account and returns an authentication token.
+        """
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -34,10 +45,18 @@ class RegistrationView(GenericAPIView):
 
 
 class LoginView(GenericAPIView):
+    """
+    Handles requests for authenticating existing users.
+    """
+
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
 
     def post(self, request):
+        """
+        Authenticates a user and returns an authentication token.
+        """
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 

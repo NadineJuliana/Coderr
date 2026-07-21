@@ -1,3 +1,7 @@
+"""
+Tests for successful review detail endpoint requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from reviews_app.tests.base import ReviewsEndpointTestBase
 class ReviewDetailAPITestCaseHappy(
     ReviewsEndpointTestBase
 ):
+    """
+    Tests successful review update and deletion requests.
+    """
 
     def test_reviewer_can_update_own_review(self):
+        """
+        Tests that an author can update their own review.
+        """
+
         self.authenticate(
             self.customer_token,
         )
@@ -53,6 +64,10 @@ class ReviewDetailAPITestCaseHappy(
         )
 
     def test_reviewer_can_delete_own_review(self):
+        """
+        Tests that an author can delete their own review.
+        """
+
         self.authenticate(
             self.customer_token,
         )

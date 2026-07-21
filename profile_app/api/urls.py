@@ -1,3 +1,7 @@
+"""
+URL routes for profile detail and profile list endpoints.
+"""
+
 from django.urls import path
 from .views import (
     BusinessProfileListView,

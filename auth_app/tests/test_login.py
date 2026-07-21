@@ -1,3 +1,7 @@
+"""
+Tests for the login endpoint.
+"""
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
@@ -9,8 +13,15 @@ User = get_user_model()
 
 
 class LoginAPITestCaseHappy(APITestCase):
+    """
+    Tests successful login requests.
+    """
 
     def setUp(self):
+        """
+        Creates a user and prepares valid login data.
+        """
+
         self.password = "examplePassword"
 
         self.user = User.objects.create_user(
@@ -27,6 +38,10 @@ class LoginAPITestCaseHappy(APITestCase):
         }
 
     def test_login_returns_200(self):
+        """
+        Tests that a successful login returns status 200.
+        """
+
         response = self.client.post(
             self.url,
             self.data,
@@ -39,6 +54,10 @@ class LoginAPITestCaseHappy(APITestCase):
         )
 
     def test_login_returns_user_data_and_token(self):
+        """
+        Tests that login returns the user data and token.
+        """
+
         response = self.client.post(
             self.url,
             self.data,
@@ -61,8 +80,15 @@ class LoginAPITestCaseHappy(APITestCase):
 
 
 class LoginAPITestCaseUnhappy(APITestCase):
+    """
+    Tests unsuccessful login requests.
+    """
 
     def setUp(self):
+        """
+        Creates a user and prepares invalid login data.
+        """
+
         self.user = User.objects.create_user(
             username="exampleUsername",
             email="example@mail.de",
@@ -77,6 +103,10 @@ class LoginAPITestCaseUnhappy(APITestCase):
         }
 
     def test_login_returns_400_for_invalid_data(self):
+        """
+        Tests that invalid credentials return status 400.
+        """
+
         response = self.client.post(
             self.url,
             self.data,

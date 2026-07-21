@@ -1,3 +1,7 @@
+"""
+Shared test setup and helper methods for offer endpoint tests.
+"""
+
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -9,8 +13,15 @@ User = get_user_model()
 
 
 class OffersTestBase(APITestCase):
+    """
+    Provides shared users, tokens, and offer helper methods.
+    """
 
     def setUp(self):
+        """
+        Creates business and customer users with authentication tokens.
+        """
+
         self.business_user = User.objects.create_user(
             username="business_user",
             email="business@mail.de",
@@ -47,6 +58,10 @@ class OffersTestBase(APITestCase):
         )
 
     def authenticate(self, token):
+        """
+        Authenticates the test client with the provided token.
+        """
+
         self.client.credentials(
             HTTP_AUTHORIZATION=f"Token {token.key}",
         )
@@ -58,6 +73,10 @@ class OffersTestBase(APITestCase):
         title="Website Design",
         description="Professionelles Website-Design",
     ):
+        """
+        Creates an offer with basic, standard, and premium details.
+        """
+
         offer = Offer.objects.create(
             user=user or self.business_user,
             title=title,
@@ -114,6 +133,10 @@ class OffersTestBase(APITestCase):
         )
 
     def get_valid_offer_data(self):
+        """
+        Returns valid request data for creating an offer.
+        """
+
         return {
             "title": "Grafikdesign-Paket",
             "image": None,
@@ -160,8 +183,15 @@ class OffersTestBase(APITestCase):
 
 
 class OffersEndpointTestBase(OffersTestBase):
+    """
+    Provides an existing offer and its details for endpoint tests.
+    """
 
     def setUp(self):
+        """
+        Creates shared users, tokens, an offer, and its details.
+        """
+
         super().setUp()
 
         (

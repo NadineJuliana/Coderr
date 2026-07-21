@@ -1,3 +1,7 @@
+"""
+Tests for unsuccessful profile endpoint requests.
+"""
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
@@ -11,8 +15,15 @@ User = get_user_model()
 
 
 class ProfileAPITestCaseUnhappy(APITestCase):
+    """
+    Tests authentication, permission, and missing profile errors.
+    """
 
     def setUp(self):
+        """
+        Creates users, profiles, and an authentication token.
+        """
+
         self.user = User.objects.create_user(
             username="testuser",
             email="testuser@mail.de",
@@ -41,6 +52,10 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         )
 
     def test_patch_profile_without_authentication_returns_401(self):
+        """
+        Tests that unauthenticated profile updates return status 401.
+        """
+
         self.client.credentials()
 
         url = reverse(
@@ -60,6 +75,10 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         )
 
     def test_patch_other_profile_returns_403(self):
+        """
+        Tests that updating another user's profile returns status 403.
+        """
+
         url = reverse(
             "profile-detail",
             kwargs={"pk": self.other_user.id},
@@ -82,6 +101,10 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         )
 
     def test_patch_non_existing_profile_returns_404(self):
+        """
+        Tests that updating a missing profile returns status 404.
+        """
+
         url = reverse(
             "profile-detail",
             kwargs={"pk": 9999},
@@ -99,6 +122,10 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         )
 
     def test_get_profile_without_authentication_returns_401(self):
+        """
+        Tests that unauthenticated profile requests return status 401.
+        """
+
         self.client.credentials()
 
         url = reverse(
@@ -114,6 +141,10 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         )
 
     def test_get_non_existing_profile_returns_404(self):
+        """
+        Tests that requesting a missing profile returns status 404.
+        """
+
         url = reverse(
             "profile-detail",
             kwargs={"pk": 9999},
@@ -127,6 +158,10 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         )
 
     def test_get_business_profiles_without_authentication_returns_401(self):
+        """
+        Tests that unauthenticated business list requests return 401.
+        """
+
         self.client.credentials()
 
         url = reverse("business-profile-list")
@@ -139,6 +174,10 @@ class ProfileAPITestCaseUnhappy(APITestCase):
         )
 
     def test_get_customer_profiles_without_authentication_returns_401(self):
+        """
+        Tests that unauthenticated customer list requests return 401.
+        """
+
         self.client.credentials()
 
         url = reverse("customer-profile-list")

@@ -1,3 +1,7 @@
+"""
+Tests for successful offer detail endpoint requests.
+"""
+
 from django.urls import reverse
 from rest_framework import status
 
@@ -8,8 +12,15 @@ from offers_app.tests.base import OffersEndpointTestBase
 class OfferDetailAPITestCaseHappy(
     OffersEndpointTestBase
 ):
+    """
+    Tests successful offer retrieval, update, and deletion.
+    """
 
     def setUp(self):
+        """
+        Creates the shared test data and offer detail URL.
+        """
+
         super().setUp()
 
         self.url = reverse(
@@ -20,6 +31,10 @@ class OfferDetailAPITestCaseHappy(
         )
 
     def test_authenticated_user_can_get_offer_detail(self):
+        """
+        Tests that an authenticated user can retrieve an offer.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -56,6 +71,10 @@ class OfferDetailAPITestCaseHappy(
         )
 
     def test_owner_can_update_offer(self):
+        """
+        Tests that an offer owner can update their offer.
+        """
+
         self.authenticate(
             self.business_token,
         )
@@ -120,6 +139,10 @@ class OfferDetailAPITestCaseHappy(
         )
 
     def test_owner_can_delete_offer(self):
+        """
+        Tests that an offer owner can delete their offer.
+        """
+
         self.authenticate(
             self.business_token,
         )
