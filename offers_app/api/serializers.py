@@ -77,6 +77,14 @@ class OfferBaseSerializer(serializers.ModelSerializer):
             "min_price",
             "min_delivery_time",
         ]
+        read_only_fields = [
+            "id",
+            "user",
+            "created_at",
+            "updated_at",
+            "min_price",
+            "min_delivery_time",
+        ]
 
 
 class OfferUserDetailsSerializer(serializers.Serializer):
@@ -118,7 +126,7 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         model = Offer
         fields = [
             "id",
-            "user",
+            # "user",
             "title",
             "image",
             "description",
@@ -126,7 +134,7 @@ class OfferWriteSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = [
             "id",
-            "user",
+            # "user",
         ]
 
     def validate_details(self, value):
