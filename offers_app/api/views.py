@@ -1,5 +1,6 @@
 from django.db.models import Min
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (
     ListCreateAPIView,
@@ -13,7 +14,6 @@ from rest_framework.permissions import (
 
 from offers_app.models import Offer, OfferDetail
 from .pagination import OfferPagination
-
 from .filters import OfferFilter
 from .permissions import (
     IsBusinessUser,
@@ -58,6 +58,15 @@ class OfferListCreateView(ListCreateAPIView):
         "min_price",
     ]
 
+    ordering = ["-updated_at"]
+
+    valid_ordering_fields = {
+        "updated_at",
+        "-updated_at",
+        "min_price",
+        "-min_price",
+    }
+
     def get_serializer_class(self):
         if self.request.method == "POST":
             return OfferWriteSerializer
@@ -72,6 +81,30 @@ class OfferListCreateView(ListCreateAPIView):
             IsAuthenticated(),
             IsBusinessUser(),
         ]
+
+    def list(self, request, *args, **kwargs):
+        self.validate_ordering(request)
+
+        return super().list(
+            request,
+            *args,
+            **kwargs,
+        )
+
+    def validate_ordering(self, request):
+        ordering = request.query_params.get("ordering")
+
+        if (
+            ordering
+            and ordering not in self.valid_ordering_fields
+        ):
+            raise ValidationError(
+                {
+                    "ordering": (
+                        "Invalid ordering parameter."
+                    )
+                }
+            )
 
     def perform_create(self, serializer):
         serializer.save(
