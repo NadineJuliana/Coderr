@@ -20,6 +20,13 @@ class BaseInfoAPITestCaseHappy(APITestCase):
             type="customer",
         )
 
+        self.other_customer_user = User.objects.create_user(
+            username="other_customer_user",
+            email="other_customer@mail.de",
+            password="examplePassword",
+            type="customer",
+        )
+
         self.business_user = User.objects.create_user(
             username="business_user",
             email="business@mail.de",
@@ -27,9 +34,9 @@ class BaseInfoAPITestCaseHappy(APITestCase):
             type="business",
         )
 
-        self.second_business_user = User.objects.create_user(
-            username="second_business_user",
-            email="second_business@mail.de",
+        self.other_business_user = User.objects.create_user(
+            username="other_business_user",
+            email="other_business@mail.de",
             password="examplePassword",
             type="business",
         )
@@ -41,16 +48,9 @@ class BaseInfoAPITestCaseHappy(APITestCase):
             description="Sehr guter Service.",
         )
 
-        self.second_customer = User.objects.create_user(
-            username="second_customer",
-            email="second_customer@mail.de",
-            password="examplePassword",
-            type="customer",
-        )
-
         Review.objects.create(
             business_user=self.business_user,
-            reviewer=self.second_customer,
+            reviewer=self.other_customer_user,
             rating=5,
             description="Top Qualität.",
         )
@@ -62,7 +62,7 @@ class BaseInfoAPITestCaseHappy(APITestCase):
         )
 
         Offer.objects.create(
-            user=self.second_business_user,
+            user=self.other_business_user,
             title="Grafikdesign",
             description="Professionelles Grafikdesign",
         )
