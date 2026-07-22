@@ -79,12 +79,19 @@ pip install -r requirements.txt
 
 Create a `.env` file in the project root based on the provided `.env.template`.
 
-Example:
+**Windows**
 
-```env
-SECRET_KEY=your-secret-key
-DEBUG=True
+```bash
+Copy-Item .env.template .env
 ```
+
+**Linux / macOS**
+
+```bash
+cp .env.template .env
+```
+
+The project automatically loads environment variables from the `.env` file using `python-dotenv`.
 
 ---
 
