@@ -27,7 +27,7 @@ Authentication is implemented using Django REST Framework Token Authentication.
 
 ## Tech Stack
 
-* Python 3.13+
+* Python 3.12+
 * Django 6
 * Django REST Framework
 * DRF Token Authentication
