@@ -17,10 +17,18 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
 
+# Environment variables
 load_dotenv()
+
+
+def get_env_list(name, default=""):
+    return [
+        value.strip()
+        for value in os.getenv(name, default).split(",")
+        if value.strip()
+    ]
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -33,7 +41,10 @@ if not SECRET_KEY:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = get_env_list(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1",
+)
 
 
 # Application definition
@@ -68,17 +79,26 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:5500',
-    'http://localhost:5500',
-]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:5500',
-    'http://localhost:5500',
-]
+# CORS and CSRF settings
+
+CSRF_TRUSTED_ORIGINS = get_env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "http://localhost:5500,http://127.0.0.1:5500",
+)
+
+CORS_ALLOWED_ORIGINS = get_env_list(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:5500,http://127.0.0.1:5500",
+)
+
+
+# URL configuration
 
 ROOT_URLCONF = 'core.urls'
+
+
+# Templates
 
 TEMPLATES = [
     {
@@ -94,6 +114,9 @@ TEMPLATES = [
         },
     },
 ]
+
+
+# WSGI application
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
@@ -143,8 +166,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
+
+# Media files
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+# Django REST Framework
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -158,5 +190,7 @@ REST_FRAMEWORK = {
     ],
 }
 
+
+# Custom user model
 
 AUTH_USER_MODEL = "auth_app.User"
